@@ -2,9 +2,13 @@
 const int pinecho = 11;
 const int pintrigger = 12;
 const int pinled = 10;
- 
+const int pinled2 = 8;
 // VARIABLES PARA CALCULOS
 unsigned int tiempo, distancia;
+
+//SENSOR PIR
+const int sPIR = 2;
+int mov = 0;
  
 void setup() {
   // PREPARAR LA COMUNICACION SERIAL
@@ -12,7 +16,11 @@ void setup() {
   // CONFIGURAR PINES DE ENTRADA Y SALIDA
   pinMode(pinecho, INPUT);
   pinMode(pintrigger, OUTPUT);
-  pinMode(29, OUTPUT);
+  pinMode(pinled, OUTPUT);
+ pinMode(pinled2, OUTPUT);
+ pinMode(sPIR,INPUT);
+  Serial.println("PIR Motion | Sensor de Movimiento IR");
+  Serial.println(" ");
 }
  
 void loop() {
@@ -38,9 +46,25 @@ void loop() {
  
   // ENCENDER EL LED CUANDO SE CUMPLA CON CIERTA DISTANCIA
   if (distancia <= 15) {
-    digitalWrite(13, HIGH);
+    digitalWrite(pinled, HIGH);
     delay(500);
   } else {
-    digitalWrite(13, LOW);
+    digitalWrite(pinled, LOW);
   }
+  mov = digitalRead(sPIR);
+  
+  if (mov == HIGH) {
+    digitalWrite(pinled2,HIGH);
+  Serial.print("*P"+String(mov)+"*");
+    Serial.print(mov); Serial.print(" : "); Serial.println("Movimiento detectado"); 
+    delay(2000);
+     mov = 0;
+    
+  }
+ else {
+    digitalWrite(pinled2,LOW);
+    Serial.print(mov); Serial.print(" : "); Serial.println("No se detecta movimiento");
+    
+    delay(200);
+    }
 }
